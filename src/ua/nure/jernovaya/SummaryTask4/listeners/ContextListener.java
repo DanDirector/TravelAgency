@@ -1,0 +1,149 @@
+package ua.nure.jernovaya.SummaryTask4.listeners;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+import org.apache.log4j.Logger;
+
+import ua.nure.jernovaya.SummaryTask4.commands.AddHotelCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.AdminCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.AllToursCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.ClientsSearchCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.CountriesCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.CurrentCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.DeleteHotelCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.DeleteTourCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.HotTourCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.Invoker;
+import ua.nure.jernovaya.SummaryTask4.commands.LogInCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.LogOutCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.ManagerCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.UpdateCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.UpdateTourCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.UsersCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.UsersSearchCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.UsersUpdateCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.MyAccountCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.NewTourCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.NextPageCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.PreviousPageCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.RegCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.ReserveCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.SearchHotelsCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.SelectToursCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.SendMailCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.SelectOrdersCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.SortCommand;
+import ua.nure.jernovaya.SummaryTask4.commands.SubscribeCommand;
+import ua.nure.jernovaya.SummaryTask4.tags.ImagePaths;
+/**
+ * 
+ * @author Elmira Jernovaya.
+ *
+ */
+public class ContextListener implements ServletContextListener {
+	/**
+	 * Logger.
+	 */
+	final static Logger LOGGER = Logger.getLogger(ContextListener.class);
+
+	@Override
+	public void contextInitialized(ServletContextEvent event) {
+		ServletContext context = event.getServletContext();
+		String commonPath = context.getRealPath("");
+		ImagePaths.parentPath = commonPath;
+		saveAttributes(context);
+		saveCommands();
+		String localesFileName = context.getInitParameter("locales");
+		String localesFileRealPath = context.getRealPath(localesFileName);
+		Properties locales = new Properties();
+		try {
+			locales.load(new FileInputStream(localesFileRealPath));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		context.setAttribute("locales", locales);
+		locales.list(System.out);
+		
+  
+	}
+	private void saveAttributes(ServletContext context){
+		String[] countries = context.getInitParameter("countries").split("\\s");
+		context.setAttribute("countries", countries);
+		
+		String[] authorizied = context.getInitParameter("authorized").split("\\s");
+		List<String> authoriziedList = new ArrayList<>(Arrays.asList(authorizied));
+		context.setAttribute("authoriziedList", authoriziedList);
+		
+		String[] pages = context.getInitParameter("pagesList").split("\\s");
+		List<String> pagesList = new ArrayList<>(Arrays.asList(pages));
+		context.setAttribute("pagesList", pagesList);
+		
+		String[]denyComsManager=context.getInitParameter("denyComsManager").split("\\s");
+		List<String> denyComsManagerList = new ArrayList<>(Arrays.asList(denyComsManager));
+		context.setAttribute("denyComsManager", denyComsManagerList);
+		
+		
+		String[]denyPagesManager=context.getInitParameter("denyPagesManager").split("\\s");
+		List<String> denyPagesManagerList = new ArrayList<>(Arrays.asList(denyPagesManager));
+		context.setAttribute("denyPagesManager", denyPagesManagerList);
+		
+		String[]denyComsClient=context.getInitParameter("denyComsClient").split("\\s");
+		List<String> denyComsClientList = new ArrayList<>(Arrays.asList(denyComsClient));
+		context.setAttribute("denyComsClient", denyComsClientList);
+		
+		
+		String[]denyPagesClient=context.getInitParameter("denyPagesClient").split("\\s");
+		List<String> denyPagesClientList = new ArrayList<>(Arrays.asList(denyPagesClient));
+		context.setAttribute("denyPagesClient", denyPagesClientList);
+		context.setAttribute("madeOrder", 87);
+		
+	}
+	private void saveCommands(){
+		Invoker.map.put("allTours", new AllToursCommand());
+		Invoker.map.put("Sort", new SortCommand());
+		Invoker.map.put("Select", new SelectToursCommand());
+		Invoker.map.put("Countries", new CountriesCommand());
+		Invoker.map.put("Reserve", new ReserveCommand());
+		Invoker.map.put("myAccount", new MyAccountCommand());
+		Invoker.map.put("logOut", new LogOutCommand());
+		Invoker.map.put("login", new LogInCommand());
+		Invoker.map.put("register", new RegCommand());
+		Invoker.map.put("manager", new ManagerCommand());
+		Invoker.map.put("update", new UpdateCommand());
+		Invoker.map.put("setHot", new HotTourCommand());
+		Invoker.map.put("ClientsSearch", new ClientsSearchCommand());
+		Invoker.map.put("SelectOrders", new SelectOrdersCommand());
+		Invoker.map.put("admin", new AdminCommand());
+		Invoker.map.put("nextPage", new NextPageCommand());
+		Invoker.map.put("previousPage", new PreviousPageCommand());
+		Invoker.map.put("updateTour", new UpdateTourCommand());
+		Invoker.map.put("deleteTour", new DeleteTourCommand());
+		Invoker.map.put("searchHotels", new SearchHotelsCommand());
+		Invoker.map.put("newHotel", new AddHotelCommand());
+		Invoker.map.put("deleteHotel", new DeleteHotelCommand());
+		Invoker.map.put("users", new UsersCommand());
+		Invoker.map.put("usersSearch", new UsersSearchCommand());
+		Invoker.map.put("updateUser", new UsersUpdateCommand());
+		Invoker.map.put("newTour", new NewTourCommand());
+		Invoker.map.put("subscribe", new SubscribeCommand());
+		Invoker.map.put("mail", new SendMailCommand());
+		Invoker.map.put("current", new CurrentCommand());
+
+		
+	}
+
+	@Override
+	public void contextDestroyed(ServletContextEvent event) {
+
+	}
+
+}

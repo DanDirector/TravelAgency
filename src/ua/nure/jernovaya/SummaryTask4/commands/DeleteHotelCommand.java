@@ -1,0 +1,74 @@
+/**
+ * 
+ */
+package ua.nure.jernovaya.SummaryTask4.commands;
+
+import java.io.File;
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+
+import ua.nure.jernovaya.SummaryTask4.dao.HotelDAO;
+import ua.nure.jernovaya.SummaryTask4.entity.Hotel;
+import ua.nure.jernovaya.SummaryTask4.tags.ImagePaths;
+import ua.nure.jernovaya.SummaryTask4.validators.Validator;
+
+/**
+ * @author Elmira Jernovaya.
+ *
+ */
+public class DeleteHotelCommand implements Command {
+	/**
+	 * Logger.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(DeleteHotelCommand.class);
+	 HotelDAO hotelDao = new HotelDAO();
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @throws IOException
+	 * 
+	 * @see ua.nure.jernovaya.SummaryTask4.commands.Command#execute(javax.servlet.http.HttpServletRequest,
+	 *      javax.servlet.http.HttpServletResponse)
+	 */
+	@Override
+	public void execute(HttpServletRequest req, HttpServletResponse res) {
+		String strId = req.getParameter("id");
+		if (strId != null && Validator.isInteger(strId)) {
+			int id = Integer.parseInt(strId);
+			Hotel hotel = hotelDao.read(id);
+			String path = hotel.getPhotosPath();
+			File f = new File("C:\\workspace\\WebContent\\" + path);
+			File f1 = new File(ImagePaths.parentPath + path);
+			delete(f1);
+			delete(f);
+			hotelDao.delete(hotel);
+		}
+		try {
+			res.sendRedirect("Controller?com=admin");
+		} catch (IOException e) {
+			LOGGER.error(e.getMessage());
+		}
+	}
+
+	/**
+	 * deletes all files in directory.
+	 * @param file
+	 */
+	private void delete(File file) {
+		if (!file.exists())
+			return;
+		if (file.isDirectory()) {
+			for (File f : file.listFiles())
+				delete(f);
+			file.delete();
+		} else {
+			file.delete();
+		}
+	}
+
+}

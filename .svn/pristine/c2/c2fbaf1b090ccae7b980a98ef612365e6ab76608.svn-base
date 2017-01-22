@@ -1,0 +1,45 @@
+package ua.nure.jernovaya.SummaryTask4.commands;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
+
+import ua.nure.jernovaya.SummaryTask4.dao.TourDAO;
+import ua.nure.jernovaya.SummaryTask4.jdbc.Sqls;
+
+/**
+ * 
+ * @author Elmira Jernovaya.
+ *
+ */
+public class AllToursCommand implements Command {
+	/**
+	 * Logger.
+	 */
+	static final Logger LOGGER = Logger.getLogger(AllToursCommand.class);
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see ua.nure.jernovaya.SummaryTask4.commands.Command#execute(javax.servlet.http.HttpServletRequest,
+	 *      javax.servlet.http.HttpServletResponse)
+	 */
+	@Override
+	public void execute(HttpServletRequest request, HttpServletResponse response) {
+		TourDAO tourDAO = new TourDAO();
+		HttpSession session = request.getSession();
+		session.setAttribute("simpleTours", tourDAO.getAllTours(Sqls.SELECT_ALL_SIMPLE_TOURS));
+		session.setAttribute("hotTours", tourDAO.getAllTours(Sqls.SELECT_ALL_HOT_TOURS));
+		try {
+			response.sendRedirect("tours.jsp");
+		} catch (IOException e) {
+			LOGGER.error(e.getMessage());
+		}
+
+	}
+
+}

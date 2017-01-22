@@ -1,0 +1,263 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="l" uri="http://nure.ua/SummaryTask4"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<l:det/>
+<jsp:useBean id="date" class="java.util.Date" />
+<fmt:formatDate pattern="yyyy-MM-dd" value="${date}" var="currDate" />
+<fmt:setLocale value="${currentLocale}" scope="session"/>
+<fmt:setBundle basename="resources"/>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title><fmt:message key='Details'/></title>
+<link rel="icon" href="images/favicon.ico">
+<link rel="shortcut icon" href="images/favicon.ico" />
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/mycss.css">
+<link rel="stylesheet" href="css/animate.min.css">
+<link rel="stylesheet" href="css/slider.css">
+<script src="js/jquery.js"></script>
+<script src="js/jquery-migrate-1.1.1.js"></script>
+<script src="js/superfish.js"></script>
+<script src="js/jquery.equalheights.js"></script>
+<script src="js/jquery.easing.1.3.js"></script>
+<script src="js/jquery.ui.totop.js"></script>
+<script src="js/animate-css.js"></script>
+<script src="js/common.js"></script>
+<script src="js/waypoints.min.js"></script>
+<script src="js/sForm.js"></script>
+<script src="js/jquery.jqtransform.js"></script>
+<script src="js/tms-0.4.1.js"></script>
+<script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="js/jquery.ui.totop.js"></script>
+<script>
+	$(window).load(function() {
+		$('.slider')._TMS({
+			show : 0,
+			pauseOnHover : false,
+			prevBu : '.prev',
+			nextBu : '.next',
+			playBu : false,
+			duration : 800,
+			preset : 'random',
+			pagination : false,//'.pagination',true,'<ul></ul>'
+			pagNums : false,
+			slideshow : 8000,
+			numStatus : false,
+			banners : true,
+			waitBannerAnimation : false,
+			progressBar : false
+		});
+		$("#tabs").tabs();
+
+		$().UItoTop({
+			easingType : 'easeOutQuart'
+		});
+	});
+</script>
+<script>
+	$(window).load(function() {
+		$().UItoTop({
+			easingType : 'easeOutQuart'
+		});
+	});
+</script>
+<!--[if lt IE 8]>
+       <div style=' clear: both; text-align:center; position: relative;'>
+         <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+           <img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
+         </a>
+      </div>
+    <![endif]-->
+<!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+      <link rel="stylesheet" media="screen" href="css/ie.css">
+
+    <![endif]-->
+</head>
+<body class="">
+	<!--==============================header=================================-->
+	<header>
+	<div class="container_12">
+		<div class="grid_12">
+			<h1>
+				<a href="index.jsp"><img src="images/logo.png"
+					alt="Gerald Harris attorney at law"></a>
+			</h1>
+
+
+			<div class="clear"></div>
+		</div>
+		<div class="menu_block">
+			<nav class="">
+			<ul class="sf-menu">
+				<li><a href="index.jsp"><fmt:message key='Home'/></a></li>
+				<li><a href="index-1.jsp"><fmt:message key='About'/></a></li>
+				<li><a href="index-2.jsp"><fmt:message key='Gallery'/></a></li>
+				<li class="current"><a href="Controller?com=allTours"><fmt:message key='Tours'/></a></li>
+				<li><a href="Controller?com=myAccount"><fmt:message key='Account'/></a>
+					<ul>
+						<c:choose>
+							<c:when test="${user==null}">
+								<li><a href="login.jsp"><fmt:message key='Login'/></a></li>
+								<li><a href="register.jsp"><fmt:message key='Register'/></a></li>
+							</c:when>
+							<c:otherwise>
+								<li><a href="Controller?com=logOut"><fmt:message key='Log_out'/></a></li>
+							</c:otherwise>
+						</c:choose>
+					</ul></li>
+				<li><a href="index-5.jsp"><fmt:message key='Contacts'/></a></li>
+			</ul>
+			</nav>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	</header>
+    <div class="lng">
+		<form action="changeLocale.jsp" method="post">
+		<input type="hidden" name="page" value="details.jsp">
+			<select name="locale">
+				<c:forEach items="${applicationScope.locales}" var="locale">
+					<c:set var="selected"
+						value="${locale.key == currentLocale ? 'selected' : '' }" />
+					<option value="${locale.key}" ${selected}>${locale.value}</option>
+				</c:forEach>
+			</select> <input class="lnginput" type="submit"
+				value="<fmt:message key='Save'/>">
+
+		</form>
+	</div>
+	
+	<div class="main">
+		<!--=======content================================-->
+
+		<div class="content">
+			<div class="ic"></div>
+			<div class="container_12">
+			<c:choose>
+            <c:when test="${currentTour!=null}">
+				<div class="grid_10">
+					<div class="blog">
+					
+						<time datetime=""> <fmt:formatDate pattern="dd-MM-yyyy"
+							value="${currentTour.departureDate}" /> </time>
+						<div class="extra_wrapper">
+							<div class="text1 upp">${currentTour.hotel.name}
+								${currentTour.hotel.rate} ★</div>
+							<div class="links">
+								${currentTour.hotel.country},${currentTour.hotel.city}<strong
+									class="myprice">${currentTour.price} $</strong>
+							</div>
+						</div>
+						<div class="clear"></div>
+
+						<div class="sldr">
+							<div class="slider-relative">
+								<div class="slider-block">
+									<div class="slider">
+										<a href="#" class="prev"></a><a href="#" class="next"></a>
+										<ul class="items">
+											<c:choose>
+												<c:when
+													test="${fn:length(l:getPaths(currentTour.hotel.photosPath))>0}">
+													<c:forEach begin="0"
+														end="${fn:length(l:getPaths(currentTour.hotel.photosPath))-1}"
+														varStatus="loop">
+														<li><img
+															src="${currentTour.hotel.photosPath}/${l:getPaths(currentTour.hotel.photosPath)[loop.index]}"
+															alt=""></li>
+													</c:forEach>
+												</c:when>
+												<c:otherwise>
+													<li><img src="images/no_photo.jpg" alt=""></li>
+												</c:otherwise>
+											</c:choose>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="extra_wrapper">
+							<p class="text1">${currentTour.hotel.description}</p>
+							<br>
+						</div>
+
+
+					</div>
+
+					<div class="tourbottom">
+						<div class="block4">${currentTour.hotel.nut}</div>
+						<div class="block4">${currentTour.personCount} &#128107</div>
+						<div class="block4">${currentTour.nights} <fmt:message key='nights'/></div>
+						<div class="block4">&#9992 ${currentTour.departureCity}</div>
+					</div>
+					<c:choose>
+					<c:when test="${currDate<=currentTour.departureDate}">
+					<a href="Controller?com=Reserve&where=details.jsp" class="btn"><fmt:message key='Reserve'/></a>
+					</c:when>
+					<c:otherwise>
+					<c:set var="warning" value="<fmt:message key='istek'/>" scope="session"/>
+					
+					<button class="btn" type="button" style="
+					height: 31px;
+					width: 100px;
+					font-size: larger;
+					border-radius: 7px;
+					color: #675f55;
+					background-color: #e9ecec;"><fmt:message key='Reserve'/></button>
+					</c:otherwise>
+					</c:choose>
+					<c:choose>
+					<c:when test="${warning!=null}">
+					<br/><br/>
+					<p><fmt:message key='istek'/></p>
+					</c:when>
+					</c:choose>
+
+				</div>
+				<div class="grid_2">
+
+					<ul class="list2 l1">
+						<c:forEach begin="0" end="${fn:length(countries)-1}"
+							varStatus="loop">
+							<li class="myli"><a
+								href="Controller?com=Countries&country=${countries[loop.index]}">${countries[loop.index]}</a></li>
+						</c:forEach>
+					</ul>
+				</div>
+				</c:when>
+				<c:otherwise></c:otherwise>
+				</c:choose>
+				<div class="clear"></div>
+				
+			</div>
+			
+		</div>
+
+		<!--=======bottom================================-->
+		<l:b/>
+		<!--==============================footer=================================-->
+
+	</div>
+	<footer>
+	<div class="container_12">
+		<div class="grid_12">
+			
+			<div class="copy">
+				Journey &copy; 2016
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+
+	</footer>
+<c:set var="warning" value="${null}" scope="session"/>
+</body>
+</html>

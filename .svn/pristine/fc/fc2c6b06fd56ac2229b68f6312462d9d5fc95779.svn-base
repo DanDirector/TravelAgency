@@ -1,0 +1,54 @@
+/**
+ * 
+ */
+package ua.nure.jernovaya.SummaryTask4.commands;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import ua.nure.jernovaya.SummaryTask4.dao.HotelDAO;
+import ua.nure.jernovaya.SummaryTask4.dao.TourDAO;
+
+/**
+ * @author Elmira Jernovaya.
+ *
+ */
+public class AdminCommandTest extends Mockito {
+
+	private static AdminCommand ac;
+
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		ac = new AdminCommand();
+	}
+
+	/**
+	 * Test method for
+	 * {@link ua.nure.jernovaya.SummaryTask4.commands.AdminCommand#execute(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)}
+	 * .
+	 */
+	@Test
+	public void testExecute() {
+		HttpServletRequest request = mock(HttpServletRequest.class);
+		HttpServletResponse response = mock(HttpServletResponse.class);
+		HttpSession session = mock(HttpSession.class);
+		HotelDAO hotelDao = mock(HotelDAO.class);
+		TourDAO tourDao = mock(TourDAO.class);
+		ac.hotelDao = hotelDao;
+		ac.tourDao = tourDao;
+		when(request.getSession()).thenReturn(session);
+		when(request.getParameter(Mockito.anyString())).thenReturn(null);
+		when(tourDao.getAllTours(Mockito.anyString())).thenReturn(null);
+		when(hotelDao.getAllHotels()).thenReturn(null);
+		ac.execute(request, response);
+	}
+
+}

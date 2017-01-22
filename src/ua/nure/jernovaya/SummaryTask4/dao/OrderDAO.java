@@ -1,0 +1,264 @@
+/**
+ * 
+ */
+package ua.nure.jernovaya.SummaryTask4.dao;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import ua.nure.jernovaya.SummaryTask4.entity.Order;
+import ua.nure.jernovaya.SummaryTask4.entity.Status;
+import ua.nure.jernovaya.SummaryTask4.entity.Tour;
+import ua.nure.jernovaya.SummaryTask4.entity.User;
+import ua.nure.jernovaya.SummaryTask4.jdbc.ConnectionProvider;
+import ua.nure.jernovaya.SummaryTask4.jdbc.Sqls;
+
+/**
+ * @author Elmira Jernovaya.
+ *
+ */
+public class OrderDAO implements DAO<Order> {
+	/**
+	 * Logger.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(OrderDAO.class);
+	private TourDAO tourDao = new TourDAO();
+	private UserDAO userDao = new UserDAO();
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see ua.nure.jernovaya.SummaryTask4.dao.DAO#create(ua.nure.jernovaya.SummaryTask4.entity.Order)
+	 */
+	@Override
+	public boolean create(Order order) {
+		try (Connection con = ConnectionProvider.getConnection();
+				PreparedStatement prs = con.prepareStatement(Sqls.CREATE_ORDER)) {
+			prs.setInt(1, order.getTour().getId());
+			prs.setInt(2, order.getUser().getId());
+			prs.setString(3, order.getStatus().toString().toLowerCase());
+
+			return prs.execute();
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+		}
+		return false;
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see ua.nure.jernovaya.SummaryTask4.dao.DAO#read(int)
+	 */
+	@Override
+	public Order read(int id) {
+		Order order = null;
+		try (Connection con = ConnectionProvider.getConnection();
+				PreparedStatement prs = con.prepareStatement(Sqls.SELECT_ORDER_BY_ID)) {
+			prs.setInt(1, id);
+			ResultSet resultSet = prs.executeQuery();
+			if (resultSet.next()) {
+				order = new Order();
+				order.setId(id);
+				order.setTour(tourDao.read(resultSet.getInt("tour_id")));
+				order.setStatus(Status.valueOf(resultSet.getString("status").toUpperCase()));
+				order.setUser(userDao.read(resultSet.getInt("user_id")));
+				order.setDiscountStep(resultSet.getDouble("discount_step"));
+				order.setMaxDiscount(resultSet.getDouble("max_discount"));
+			}
+
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+		}
+		return order;
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see ua.nure.jernovaya.SummaryTask4.dao.DAO#update(ua.nure.jernovaya.SummaryTask4.entity.Order,java.lang.String)
+	 */
+	@Override
+	public boolean update(Order order, String sql) {
+		try (Connection con = ConnectionProvider.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, order.getId());
+			return ps.executeUpdate() == 1;
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+		}
+		return false;
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see ua.nure.jernovaya.SummaryTask4.dao.DAO#delete(ua.nure.jernovaya.SummaryTask4.entity.Order)
+	 */
+	@Override
+	public boolean delete(Order e) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * returns a list with all elements of the table ta.orders where
+	 * orders.user_id is equals to {@code<user.id>}.
+	 * 
+	 * @return a list with all elements of the table ta.orders where
+	 *         orders.user_id is equals to {@code<user.id>}.
+	 */
+	public List<Order> getOrdersOfUser(User user) {
+		List<Order> list = new ArrayList<>();
+		Order order = null;
+		try (Connection con = ConnectionProvider.getConnection();
+				PreparedStatement prs = con.prepareStatement(Sqls.SELECT_ORDER_BY_USER)) {
+			prs.setInt(1, user.getId());
+			ResultSet resultSet = prs.executeQuery();
+			while (resultSet.next()) {
+				order = new Order();
+				order.setStatus(Status.valueOf(resultSet.getString("status").toUpperCase()));
+				order.setId(resultSet.getInt("id"));
+				Tour tour = tourDao.read(resultSet.getInt("tour_id"));
+				order.setTour(tour);
+				order.setUser(user);
+				double step = resultSet.getDouble("discount_step");
+				order.setDiscountStep(step);
+				double disc = (step * getPayedOrders(user));
+				if (disc>=step) {
+				disc-=step;	
+				}
+				double maxDisc = resultSet.getDouble("max_discount");
+				order.setMaxDiscount(maxDisc);
+				if (disc < maxDisc) {
+					order.setDiscount(disc);
+				} else {
+					order.setDiscount(maxDisc);
+				}
+
+				list.add(order);
+			}
+
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+		}
+		return list;
+
+	}
+
+	/**
+	 * returns a list with all elements of the table ta.orders where
+	 * orders.status is equals to {@code<user.status>}.
+	 * 
+	 * @return a list with all elements of the table ta.orders where
+	 *         orders.status is equals to {@code<user.status>}.
+	 */
+	private int getPayedOrders(User user) {
+		try (Connection con = ConnectionProvider.getConnection();
+				PreparedStatement prs = con.prepareStatement(Sqls.SELECT_COUNT_OF_USERS)) {
+			prs.setInt(1, user.getId());
+			ResultSet resultSet = prs.executeQuery();
+			while (resultSet.next()) {
+				return resultSet.getInt(1);
+			}
+
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+		}
+		return 0;
+	}
+
+	/**
+	 * returns a list with all elements of the table ta.orders.
+	 * 
+	 * @return a list with all elements of the table ta.orders.
+	 */
+	public List<Order> getAllOrders() {
+		List<Order> list = new ArrayList<>();
+		Order order = null;
+		try (Connection con = ConnectionProvider.getConnection();
+				PreparedStatement prs = con.prepareStatement(Sqls.SELECT_ALL_ORDERS)) {
+			ResultSet resultSet = prs.executeQuery();
+			while (resultSet.next()) {
+				order = new Order();
+				order.setStatus(Status.valueOf(resultSet.getString("status").toUpperCase()));
+				order.setId(resultSet.getInt("id"));
+				Tour tour = tourDao.read(resultSet.getInt("tour_id"));
+				order.setTour(tour);
+				User user = userDao.read(resultSet.getInt("user_id"));
+				order.setUser(user);
+				double step = resultSet.getDouble("discount_step");
+				order.setDiscountStep(step);
+				double disc = (step * getPayedOrders(user));
+				if (disc>=step) {
+					disc-=step;	
+					}
+				double maxDisc = resultSet.getDouble("max_discount");
+				order.setMaxDiscount(maxDisc);
+				if (disc < maxDisc) {
+					order.setDiscount(disc);
+				} else {
+					order.setDiscount(maxDisc);
+				}
+
+				list.add(order);
+			}
+
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+		}
+		return list;
+	}
+
+	public List<Order> getCurrentOrders() {
+		List<Order> list = new ArrayList<>();
+		Order order = null;
+		try (Connection con = ConnectionProvider.getConnection();
+				PreparedStatement prs = con.prepareStatement(Sqls.SELECT_CURRENT_ORDERS)) {
+			Date date1=Date.valueOf(LocalDate.now());
+			Date date2=Date.valueOf(LocalDate.now().minusDays(7));
+			prs.setDate(1,date2);
+			prs.setDate(2,date1);
+
+			
+			LOGGER.info(Date.valueOf(LocalDate.now()));
+			ResultSet resultSet = prs.executeQuery();
+			while (resultSet.next()) {
+				order = new Order();
+				order.setStatus(Status.valueOf(resultSet.getString("status").toUpperCase()));
+				order.setId(resultSet.getInt("id"));
+				Tour tour = tourDao.read(resultSet.getInt("tour_id"));
+				order.setTour(tour);
+				User user = userDao.read(resultSet.getInt("user_id"));
+				order.setUser(user);
+				double step = resultSet.getDouble("discount_step");
+				order.setDiscountStep(step);
+				double disc = (step * getPayedOrders(user));
+				if (disc>=step) {
+					disc-=step;	
+					}
+				double maxDisc = resultSet.getDouble("max_discount");
+				order.setMaxDiscount(maxDisc);
+				if (disc < maxDisc) {
+					order.setDiscount(disc);
+				} else {
+					order.setDiscount(maxDisc);
+				}
+
+				list.add(order);
+			}
+
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+		}
+		return list;
+	}
+
+}

@@ -1,0 +1,202 @@
+.mybtn {
+	color: #000;
+	display: inline-block;
+	background-color: #fbf6f8;
+	border-radius: 5px;
+	box-shadow: 0 1px 1px #dedbdb;
+	font-size: 15px;
+	border: 1px solid #b1aaaa;
+	line-height: 15px;
+	padding: 5px 16px 4px;
+	width: 93px;
+	margin: 27px 0px 27px;
+}
+
+.mybtn:hover {
+	border-color: #476788;
+	color: #fff;
+	background-color: #38AFE5;
+}
+
+.otstup {
+	margin-top: 23px;
+}
+
+.mybtnForm {
+	padding: 10px;
+}
+
+.fleft {
+	margin-bottom: 15px;
+	    height: 217px;
+    width: 217px;
+}
+
+.tourbottom {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	height: 51px;
+	display: table;
+}
+
+.block4 {
+	float: left;
+	padding: 17px;
+	margin: 10px;
+	border: solid;
+	background-color: #7fc6e6;
+	width: 146px;
+	color: #fff;
+	font-size: 21px;
+}
+
+.block4:hover {
+	background-color: #38afe5;
+}
+
+body {
+	overflow-x: hidden;
+}
+
+.sldr {
+	float: left;
+	width: 392px;
+	height: 300px;
+}
+
+.sldr .slider-relative {
+	margin-top: 0px;
+}
+
+.sldr .slider-block {
+	height: 281px;
+}
+
+.sldr .slider {
+	height: 282px;
+}
+
+.sldr a.next {
+	width: 35px;
+	background: url(../images/prevnext.png) 0 0 no-repeat;
+	height: 125px;
+	position: absolute;
+	display: block;
+	/* bottom: 49px; */
+	z-index: 999;
+	left: 2px;
+	background-size: 68px;
+}
+
+.sldr a.prev {
+	background: url(../images/prevnext.png) -32px 48px no-repeat;
+	height: 168px;
+	position: absolute;
+	display: block;
+	/* bottom: 49px; */
+	z-index: 999;
+	left: 323px;
+	background-size: 68px;
+}
+
+.myprice {
+	margin-top: 2px;
+	display: inline-block;
+	float: right;
+	margin-right: 67px;
+	padding-top: 4px;
+	display: block;
+	text-transform: uppercase;
+	color: #38afe5;
+	font-size: 24px;
+}
+.dat{
+	width: 168px;
+}
+ul li.myli{
+	padding-left: 25px;
+}
+.zac{
+	background-color: #ffffff;
+    display: flex;
+    margin: auto;
+    width: 90%;
+    
+
+
+}
+.zitem{
+	background: -webkit-radial-gradient(#fcfafa,#fcfafa);
+    background-color: #4eabd7;
+    margin: 1px;
+    float: left;
+    padding: 13px;
+    width: 157px;
+    height: 70px;
+    text-align: center;
+    border: solid #dedbdb 1px;
+    }
+
+.zup{
+    font-size: 27px;
+    color: white;
+}
+.zdown{
+	margin-top: 15px;
+}
+.myfrm input{
+	    color: #263555;
+    border: 1px solid #d4d0d0;
+    padding: 4px 10px 6px;
+    width: 100%;
+    background-color: #fcfafa;
+    height: 28px;
+    float: left;
+    font: 13px/18px Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+.acc{
+	background-color: #4cabd7;
+        width: 267px;
+    line-height: 31px;
+    color: white;
+    border-radius: 46px;
+    text-align: center;
+    font-size: 18px;
+    float: right;
+    margin-right: 37px;
+}
+.shapka .topi{
+    background-color: #d1e0e6;
+    margin: 1px;
+    float: left;
+    padding: 13px;
+    width: 157px;
+    height: 21px;
+    text-align: center;
+    border: solid #dedbdb 1px;
+    font-size: 22px;
+    color: #68788c;
+}
+.oderusermame{}
+.lng{
+	margin-left: 1217px;
+    margin-bottom: 9px;
+    color: #fff;
+}
+.lnginput{
+	    border: solid 1px #949292;
+    padding: 1px;
+    width: 79px;
+    color: #000;
+}
+.tour p{
+	border-radius: 11px;
+    padding: 3px;
+    background-color: #eff7ff;
+}
+.tour:hover {
+	box-shadow: 0px 0px 40px 1px #abcbda;
+}
