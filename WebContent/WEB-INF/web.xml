@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
+  <listener>
+    <listener-class>ua.nure.jernovaya.SummaryTask4.listeners.ContextListener</listener-class>
+  </listener>
+  <filter>
+    <filter-name>EncodingFilter</filter-name>
+    <filter-class>ua.nure.jernovaya.SummaryTask4.filters.EncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>EncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter>
+    <filter-name>AuthoriziedFilter</filter-name>
+    <filter-class>ua.nure.jernovaya.SummaryTask4.filters.AuthoriziedFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>AuthoriziedFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter>
+    <filter-name>RoleFilter</filter-name>
+    <filter-class>ua.nure.jernovaya.SummaryTask4.filters.RoleFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>RoleFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <context-param>
+    <param-name>countries</param-name>
+    <param-value>Мальдивы Мексика Швеция ОАЭ Египет Греция Австрия Чехия Россия Турция Индонезия Китай Таиланд</param-value>
+  </context-param>
+  <context-param>
+    <param-name>pagesList</param-name>
+    <param-value>admin.jsp adminPanel.jsp myAccount.jsp users.jsp</param-value>
+  </context-param>
+  <context-param>
+    <param-name>denyComsManager</param-name>
+    <param-value>
+       admin nextPage previousPage updateTour deleteTour searchHotels newHotel deleteHotel users usersSearch updateUser newTour
+    </param-value>
+  </context-param>
+  <context-param>
+    <param-name>denyPagesManager</param-name>
+    <param-value>adminPanel.jsp users.jsp</param-value>
+  </context-param>
+  <context-param>
+    <param-name>denyComsClient</param-name>
+    <param-value>
+      manager update setHot ClientsSearch SelectOrders 
+      admin nextPage previousPage updateTour deleteTour searchHotels newHotel deleteHotel users usersSearch updateUser newTour mail
+    </param-value>
+  </context-param>
+  <context-param>
+    <param-name>denyPagesClient</param-name>
+    <param-value>admin.jsp adminPanel.jsp users.jsp</param-value>
+  </context-param>
+  <context-param>
+    <param-name>authorized</param-name>
+    <param-value>
+      Reserve myAccount logOut  manager update setHot ClientsSearch SelectOrders  admin nextPage previousPage updateTour deleteTour searchHotels newHotel deleteHotel users usersSearch updateUser newTour
+    </param-value>
+  </context-param>
+  <context-param>
+    <param-name>locales</param-name>
+    <param-value>/WEB-INF/locales.properties</param-value>
+  </context-param>
+</web-app>

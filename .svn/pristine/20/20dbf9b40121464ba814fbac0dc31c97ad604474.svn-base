@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+	<tlib-version>2.0</tlib-version>
+	<short-name>getTable</short-name>
+	<uri>http://nure.ua/SummaryTask4</uri>
+	<tag><name>det</name>
+		<tag-class>ua.nure.jernovaya.SummaryTask4.tags.DetailsTag</tag-class>  
+		<body-content>empty</body-content></tag>
+	<tag-file>
+		<name>b</name>
+		<path>/WEB-INF/tags/form.tag</path>
+	</tag-file>
+	
+	<function>
+<name>getPaths</name>
+<function-class>ua.nure.jernovaya.SummaryTask4.tags.ImagePaths</function-class>
+<function-signature>
+java.util.List getPaths(java.lang.String)
+</function-signature>
+</function>
+</taglib> 
